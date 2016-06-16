@@ -1,0 +1,17 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Created by IntelliJ IDEA.
+ * User: liu
+ * Date: 6/15/16
+ * Time: 5:50 PM
+ */
+
+require 'src/Toydis/Toydis.php';
+
+\Toydis\Toydis::registerAutoload();
+
+$toydis = new \Toydis\Toydis();
+//$toydis->debug = true;
+$toydis->run();
+
