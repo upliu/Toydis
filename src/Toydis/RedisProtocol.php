@@ -56,23 +56,8 @@ class RedisProtocol
         $type = $line[0];
         $line = mb_substr($line, 1, -2, '8bit');
         switch ($type) {
-            /*case '+': // Status reply
-                if ($line === 'OK' || $line === 'PONG') {
-                    return true;
-                } else {
-                    return $line;
-                }
-            case '-': // Error reply
-                // 不存在这种情况
-                return null;*/
-            case ':': // Integer reply
-                // no cast to int as it is in the range of a signed 64 bit integer
-                return $line;
-            case '$': // Bulk replies
-                if ($line == '-1') {
-                    return null;
-                }
-                $length = $line + 2;
+            case '$': // Bulk
+                $length = $line + 2; // +2 for "\r\n"
                 $data = '';
                 while ($length > 0) {
                     $block = fread($this->_socket, $length);
@@ -84,7 +69,7 @@ class RedisProtocol
                 }
 
                 return mb_substr($data, 0, -2, '8bit');
-            case '*': // Multi-bulk replies
+            case '*': // Multi-bulk
                 $count = (int) $line;
                 $data = [];
                 for ($i = 0; $i < $count; $i++) {
